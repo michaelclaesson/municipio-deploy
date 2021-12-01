@@ -1,23 +1,23 @@
 name: Municipio Deploy
-description: Centralized deploy Action for municipio based sites in Helsingborg stad
+description: Centralized deploy Action for municipio based sites in Helsingborg stad.
 inputs:
-  deploy-host-domain:
-    description: Deployment host domain
+  deploy-host:
+    description: Deployment host domain or ip.
     required: true
   deploy-host-path:
-    description: Deployment path on server
+    description: Deployment path on server.
     required: true
   deploy-host-backup-path:
-    description: Backup path for changed and deleted files after rsync deploy
+    description: Backup path for changed and deleted files after rsync deploy.
     required: true
   deploy-host-user:
-    description: Username of the rsync deployment
+    description: Username of the rsync deployment.
     required: true
   deploy-host-user-key: 
-    description: The ssh key of the user deploying through rsync
+    description: The ssh key of the user deploying through rsync.
     required: true
   github-token:
-    description: Github token for npm package retrieval
+    description: Github token for npm package retrieval.
     required: true
   
 
@@ -29,18 +29,22 @@ runs:
       with:
         node-version: 15
 
-    - name: Setup PHP with composer v2
+    - name: Setup PHP with composer v2.
       uses: shivammathur/setup-php@v2
       with:
         php-version: 7.4
         tools: composer:v2
 
-    - name: Get Composer Cache Directory
+    - name: Update browserlist.
+      run: npx browserslist@latest --update-db
+      shell: bash
+
+    - name: Get Composer Cache Directory.
       id: composer-cache
       run: |
         echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-    - name: Cache composer packages
+    - name: Cache composer packages.
       uses: actions/cache@v2
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
@@ -48,7 +52,7 @@ runs:
         restore-keys: |
           ${{ runner.os }}-composer-
 
-    - name: Cache node modules
+    - name: Cache node modules.
       uses: actions/cache@v2
       with:
         path: ~/.npm
@@ -56,21 +60,21 @@ runs:
         restore-keys: |
           ${{ runner.os }}-build-
 
-    - name: Validate composer.json and composer.lock
+    - name: Validate composer.json and composer.lock.
       run: composer validate
       shell: bash
 
-    - name: Install composer dependencies
+    - name: Install composer dependencies.
       run: composer install --prefer-dist --no-progress --no-suggest
       shell: bash
 
-    - name: Inject access token in .npmrc
+    - name: Inject access token in .npmrc.
       run: | 
         echo "@helsingborg-stad:registry=https://npm.pkg.github.com/helsingborg-stad" >> ~/.npmrc
         echo "//npm.pkg.github.com/:_authToken=${{ inputs.github-token }}" >> ~/.npmrc
       shell: bash
 
-    - name: Execute buildscripts in themes and plugins folders
+    - name: Execute buildscripts in themes and plugins folders.
       run: php ./build.php --cleanup
       shell: bash
 
@@ -78,13 +82,13 @@ runs:
       run: rm ~/.npmrc
       shell: bash
 
-    - name: rsync deployment to www-data user.
+    - name: The rsync deployment to www-data user.
       uses: burnett01/rsync-deployments@4.1
       with:
         switches: -avzrog --delete --backup --backup-dir=${{ inputs.deploy-host-backup-path }}/$GITHUB_SHA --chown=www-data:www-data --exclude config --exclude wp-content/uploads --exclude wp-content/plugins/advanced-custom-fields-pro --exclude wp-content/plugins/gravityforms --exclude wp-content/plugins/wp-schema-pro --exclude track-assets --exclude wp-content/plugins/volontar-wordpress --exclude wp-content/languages
         path: .
         remote_path: ${{ inputs.deploy-host-path }}
-        remote_host: ${{ inputs.deploy-host-domain }}
+        remote_host: ${{ inputs.deploy-host }}
         remote_user: ${{ inputs.deploy-host-user }}
         remote_key: ${{ inputs.deploy-host-user-key }}
 
@@ -92,7 +96,7 @@ runs:
       uses: appleboy/ssh-action@master
       with:
         script: find ${{ inputs.deploy-host-path }} -path ${{ inputs.deploy-host-path }}/wp-content/uploads -prune -o ! -type l -exec chmod g+rw {} +
-        host: ${{ inputs.deploy-host-domain }}
+        host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
         key: ${{ inputs.deploy-host-user-key }}
 
@@ -105,6 +109,6 @@ runs:
           wp cache flush --allow-root
           rm ${{ inputs.deploy-host-path }}/wp-content/uploads/cache/blade-cache/* || true 
           rm /tmp/blade-engine-cache/* || true
-        host: ${{ inputs.deploy-host-domain }}
+        host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
         key: ${{ inputs.deploy-host-user-key }}
