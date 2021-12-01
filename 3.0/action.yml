@@ -10,11 +10,11 @@ inputs:
   deploy-host-domain:
     description: 'deployment host domain'
     required: true
+  github-token:
+    description: 'github token for npm package retrieval'
 runs:
   using: 'composite'
   steps:
-    # - run: echo Hello ${{ inputs.who-to-greet }}.
-    #   shell: bash
 
     - uses: actions/setup-node@v2
       with:
@@ -37,7 +37,7 @@ runs:
     - name: Inject access token in .npmrc
       run: | 
         echo "@helsingborg-stad:registry=https://npm.pkg.github.com/helsingborg-stad" >> ~/.npmrc
-        echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+        echo "//npm.pkg.github.com/:_authToken=${{ inputs.github-token }}" >> ~/.npmrc
       shell: bash
 
     - name: Execute buildscripts in themes and plugins folders
