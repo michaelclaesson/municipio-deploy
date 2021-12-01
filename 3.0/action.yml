@@ -35,6 +35,11 @@ runs:
         php-version: 7.4
         tools: composer:v2
 
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: |
+        echo "::set-output name=dir::$(composer config cache-files-dir)"
+
     - name: Cache composer packages
       uses: actions/cache@v2
       with:
@@ -43,19 +48,13 @@ runs:
         restore-keys: |
           ${{ runner.os }}-composer-
 
-    - name: Cleanup .npmrc
-      run: rm ~/.npmrc
-      shell: bash
-
-    - name: rsync deployment to www-data user.
-      uses: burnett01/rsync-deployments@4.1
+    - name: Cache node modules
+      uses: actions/cache@v2
       with:
-        switches: -avzrog --delete --backup --backup-dir=${{ inputs.deploy-host-backup-path }}/$GITHUB_SHA --chown=www-data:www-data --exclude config --exclude wp-content/uploads --exclude wp-content/plugins/advanced-custom-fields-pro --exclude wp-content/plugins/gravityforms --exclude wp-content/plugins/wp-schema-pro --exclude track-assets --exclude wp-content/plugins/volontar-wordpress --exclude wp-content/languages
-        path: .
-        remote_path: ${{ inputs.deploy-host-path }}
-        remote_host: ${{ inputs.deploy-host-domain }}
-        remote_user: ${{ inputs.deploy-host-user }}
-        remote_key: ${{ inputs.deploy-host-user-key }}
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ hashFiles('**/package.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-
 
     - name: Validate composer.json and composer.lock
       run: composer validate
@@ -75,18 +74,19 @@ runs:
       run: php ./build.php --cleanup
       shell: bash
 
-    - name: Cache node modules
-      uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-build-${{ hashFiles('**/package.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-
+    - name: Cleanup .npmrc
+      run: rm ~/.npmrc
+      shell: bash
 
-    - name: Get Composer Cache Directory
-      id: composer-cache
-      run: |
-        echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - name: rsync deployment to www-data user.
+      uses: burnett01/rsync-deployments@4.1
+      with:
+        switches: -avzrog --delete --backup --backup-dir=${{ inputs.deploy-host-backup-path }}/$GITHUB_SHA --chown=www-data:www-data --exclude config --exclude wp-content/uploads --exclude wp-content/plugins/advanced-custom-fields-pro --exclude wp-content/plugins/gravityforms --exclude wp-content/plugins/wp-schema-pro --exclude track-assets --exclude wp-content/plugins/volontar-wordpress --exclude wp-content/languages
+        path: .
+        remote_path: ${{ inputs.deploy-host-path }}
+        remote_host: ${{ inputs.deploy-host-domain }}
+        remote_user: ${{ inputs.deploy-host-user }}
+        remote_key: ${{ inputs.deploy-host-user-key }}
 
     - name: Set file permissions.
       uses: appleboy/ssh-action@master
