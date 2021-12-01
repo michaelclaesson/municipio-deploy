@@ -37,10 +37,6 @@ runs:
         php-version: 7.4
         tools: composer:v2
 
-    - name: Update browserlist db.
-      run: npx browserslist@latest --update-db
-      shell: bash
-
     - name: Get Composer Cache Directory.
       id: composer-cache
       run: |
