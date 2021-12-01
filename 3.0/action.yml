@@ -45,6 +45,7 @@ runs:
       id: composer-cache
       run: |
         echo "::set-output name=dir::$(composer config cache-files-dir)"
+      shell: bash
 
     - name: Cache composer packages.
       uses: actions/cache@v2
