@@ -1,32 +1,61 @@
-name: 'Municipio Deploy'
-description: 'Centralized deploy Action for municipio based sites in Helsingborg stad'
+name: Municipio Deploy
+description: Centralized deploy Action for municipio based sites in Helsingborg stad
 inputs:
-  rsync-backup-dir: 
-    description: 'Backup dir for changed and deleted files after rsync'
-    required: true
-  deploy-path:
-    description: 'deployment path on server'
-    required: true
   deploy-host-domain:
-    description: 'deployment host domain'
+    description: Deployment host domain
+    required: true
+  deploy-host-path:
+    description: Deployment path on server
+    required: true
+  deploy-host-backup-path:
+    description: Backup path for changed and deleted files after rsync deploy
+    required: true
+  deploy-host-user:
+    description: Username of the rsync deployment
+    required: true
+  deploy-host-user-key: 
+    description: The ssh key of the user deploying through rsync
     required: true
   github-token:
-    description: 'github token for npm package retrieval'
+    description: Github token for npm package retrieval
     required: true
+  
 
 runs:
-  using: 'composite'
+  using: composite
   steps:
 
     - uses: actions/setup-node@v2
       with:
-        node-version: '15'
+        node-version: 15
 
     - name: Setup PHP with composer v2
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '7.4'
+        php-version: 7.4
         tools: composer:v2
+
+    - name: Cache composer packages
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Cleanup .npmrc
+      run: rm ~/.npmrc
+      shell: bash
+
+    - name: rsync deployment to www-data user.
+      uses: burnett01/rsync-deployments@4.1
+      with:
+        switches: -avzrog --delete --backup --backup-dir=${{ inputs.deploy-host-backup-path }}/$GITHUB_SHA --chown=www-data:www-data --exclude config --exclude wp-content/uploads --exclude wp-content/plugins/advanced-custom-fields-pro --exclude wp-content/plugins/gravityforms --exclude wp-content/plugins/wp-schema-pro --exclude track-assets --exclude wp-content/plugins/volontar-wordpress --exclude wp-content/languages
+        path: .
+        remote_path: ${{ inputs.deploy-host-path }}
+        remote_host: ${{ inputs.deploy-host-domain }}
+        remote_user: ${{ inputs.deploy-host-user }}
+        remote_key: ${{ inputs.deploy-host-user-key }}
 
     - name: Validate composer.json and composer.lock
       run: composer validate
@@ -46,36 +75,36 @@ runs:
       run: php ./build.php --cleanup
       shell: bash
 
-    - name: Cleanup .npmrc
-      run: rm ~/.npmrc
-      shell: bash
+    - name: Cache node modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ hashFiles('**/package.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-
 
-    # - name: rsync deployment to www-data user.
-    #   uses: burnett01/rsync-deployments@4.1
-    #   with:
-    #     switches: -avzrog --delete --backup --backup-dir=${{ secrets.DEPLOY_REMOTE_BACKUP_DIR_BETA_HELSINGBORG_SE }}/$GITHUB_SHA --chown=www-data:www-data --exclude config --exclude wp-content/uploads --exclude wp-content/plugins/advanced-custom-fields-pro --exclude wp-content/plugins/gravityforms --exclude wp-content/plugins/wp-schema-pro --exclude track-assets --exclude wp-content/plugins/volontar-wordpress --exclude wp-content/languages
-    #     path: .
-    #     remote_path: ${{ secrets.DEPLOY_REMOTE_PATH_BETA_HELSINGBORG_SE }}
-    #     remote_host: ${{ secrets.DEPLOY_REMOTE_HOST_BETA_HELSINGBORG_SE }}
-    #     remote_user: ${{ secrets.DEPLOY_REMOTE_USER }}
-    #     remote_key: ${{ secrets.DEPLOY_KEY }}
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: |
+        echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-    # - name: Set file permissions.
-    #   uses: appleboy/ssh-action@master
-    #   with:
-    #     script: find ${{ secrets.DEPLOY_REMOTE_PATH_BETA_HELSINGBORG_SE }} -path ${{ secrets.DEPLOY_REMOTE_PATH_BETA_HELSINGBORG_SE }}/wp-content/uploads -prune -o ! -type l -exec chmod g+rw {} +
-    #     host: ${{ secrets.DEPLOY_REMOTE_HOST_BETA_HELSINGBORG_SE }}
-    #     username: ${{ secrets.DEPLOY_REMOTE_USER }}
-    #     key: ${{ secrets.DEPLOY_KEY }}
+    - name: Set file permissions.
+      uses: appleboy/ssh-action@master
+      with:
+        script: find ${{ inputs.deploy-host-path }} -path ${{ inputs.deploy-host-path }}/wp-content/uploads -prune -o ! -type l -exec chmod g+rw {} +
+        host: ${{ inputs.deploy-host-domain }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
 
-    # - name: Clear varnish and redis object cache.
-    #   uses: appleboy/ssh-action@master
-    #   with:
-    #     script: |
-    #       cd ${{ secrets.DEPLOY_REMOTE_PATH_BETA_HELSINGBORG_SE }}
-    #       wp varnish purge --allow-root
-    #       wp cache flush --allow-root
-    #       rm -rf /tmp/blade-engine-cache/* || true
-    #     host: ${{ secrets.DEPLOY_REMOTE_HOST_BETA_HELSINGBORG_SE }}
-    #     username: ${{ secrets.DEPLOY_REMOTE_USER }}
-    #     key: ${{ secrets.DEPLOY_KEY }}
+    - name: Clear all cache.
+      uses: appleboy/ssh-action@master
+      with:
+        script: |
+          cd ${{ inputs.deploy-host-path }}
+          wp nginx-helper purge-all --allow-root
+          wp cache flush --allow-root
+          rm ${{ inputs.deploy-host-path }}/wp-content/uploads/cache/blade-cache/* || true 
+          rm /tmp/blade-engine-cache/* || true
+        host: ${{ inputs.deploy-host-domain }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
