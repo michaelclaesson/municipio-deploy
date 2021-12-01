@@ -12,6 +12,8 @@ inputs:
     required: true
   github-token:
     description: 'github token for npm package retrieval'
+    required: true
+
 runs:
   using: 'composite'
   steps:
