@@ -55,9 +55,9 @@ runs:
       uses: actions/cache@v2
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-build-${{ hashFiles('**/package.json') }}
+        key: ${{ runner.os }}-npm-${{ hashFiles('**/package.json') }}
         restore-keys: |
-          ${{ runner.os }}-build-
+          ${{ runner.os }}-npm-
 
     - name: Validate composer.json and composer.lock.
       run: composer validate
