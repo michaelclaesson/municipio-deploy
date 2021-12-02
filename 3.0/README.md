@@ -57,3 +57,4 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
   ```
 - Make sure branchname is matching the branch you would want to deploy.
+- Replace secret names with macthing secrets.
