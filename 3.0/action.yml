@@ -16,12 +16,12 @@ inputs:
   deploy-host-user-key: 
     description: The ssh key of the user deploying through rsync.
     required: true
+  deploy-host-web-server-user:
+    description: Host web server user that should own the files.
+    required: true  
   github-token:
     description: Github token for npm package retrieval.
     required: true
-  host-web-server-user:
-    description: Host web server user that should own the files.
-    required: true  
 
 runs:
   using: composite
@@ -84,7 +84,7 @@ runs:
     - name: The rsync deployment to www-data user.
       uses: burnett01/rsync-deployments@4.1
       with:
-        switches: -avzrog --delete --backup --backup-dir=${{ inputs.deploy-host-backup-path }}/$GITHUB_SHA --chown=${{ inputs.host-web-server-user }}:${{ inputs.host-web-server-user }} --exclude config --exclude wp-content/uploads --exclude wp-content/plugins/advanced-custom-fields-pro --exclude wp-content/plugins/gravityforms --exclude wp-content/plugins/wp-schema-pro --exclude track-assets --exclude wp-content/plugins/volontar-wordpress --exclude wp-content/languages
+        switches: -avzrog --delete --backup --backup-dir=${{ inputs.deploy-host-backup-path }}/$GITHUB_SHA --chown=${{ inputs.deploy-host-web-server-user }}:${{ inputs.deploy-host-web-server-user }} --exclude config --exclude wp-content/uploads --exclude wp-content/plugins/advanced-custom-fields-pro --exclude wp-content/plugins/gravityforms --exclude wp-content/plugins/wp-schema-pro --exclude track-assets --exclude wp-content/plugins/volontar-wordpress --exclude wp-content/languages
         path: .
         remote_path: ${{ inputs.deploy-host-path }}
         remote_host: ${{ inputs.deploy-host }}
