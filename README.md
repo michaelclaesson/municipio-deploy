@@ -20,7 +20,7 @@
 </p>
 
 ## About Municipio
-A README.md is located in each action that explains the purpose and usage of the action
+A README.md is located in each action folder that will explain the purpose and usage of the action
 
 
 ## Roadmap
