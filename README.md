@@ -47,13 +47,13 @@ Distributed under the [MIT License][license-url].
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/helsingborg-stad/helsingborg-io-sls-api.svg?style=flat-square
-[contributors-url]: https://github.com/helsingborg-stad/helsingborg-io-sls-api/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/helsingborg-stad/helsingborg-io-sls-api.svg?style=flat-square
-[forks-url]: https://github.com/helsingborg-stad/helsingborg-io-sls-api/network/members
-[stars-shield]: https://img.shields.io/github/stars/helsingborg-stad/helsingborg-io-sls-api.svg?style=flat-square
-[stars-url]: https://github.com/helsingborg-stad/helsingborg-io-sls-api/stargazers
-[issues-shield]: https://img.shields.io/github/issues/helsingborg-stad/helsingborg-io-sls-api.svg?style=flat-square
-[issues-url]: https://github.com/helsingborg-stad/helsingborg-io-sls-api/issues
-[license-shield]: https://img.shields.io/github/license/helsingborg-stad/helsingborg-io-sls-api.svg?style=flat-square
-[license-url]: https://raw.githubusercontent.com/helsingborg-stad/helsingborg-io-sls-api/master/LICENSE
+[contributors-shield]: https://img.shields.io/github/contributors/helsingborg-stad/municipio-deploy.svg?style=flat-square
+[contributors-url]: https://github.com/helsingborg-stad/municipio-deploy/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/helsingborg-stad/municipio-deploy.svg?style=flat-square
+[forks-url]: https://github.com/helsingborg-stad/municipio-deploy/network/members
+[stars-shield]: https://img.shields.io/github/stars/helsingborg-stad/municipio-deploy.svg?style=flat-square
+[stars-url]: https://github.com/helsingborg-stad/municipio-deploy/stargazers
+[issues-shield]: https://img.shields.io/github/issues/helsingborg-stad/municipio-deploy.svg?style=flat-square
+[issues-url]: https://github.com/helsingborg-stad/municipio-deploy/issues
+[license-shield]: https://img.shields.io/github/license/helsingborg-stad/municipio-deploy.svg?style=flat-square
+[license-url]: https://raw.githubusercontent.com/helsingborg-stad/municipio-deploy/master/LICENSE
