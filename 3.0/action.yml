@@ -22,6 +22,9 @@ inputs:
   github-token:
     description: Github token for npm package retrieval.
     required: true
+  acf-url:
+    description: ACF download url.
+    required: true
 
 runs:
   using: composite
@@ -75,7 +78,7 @@ runs:
 
     - name: Get ACF
       run: |
-        wget "${{ secrets.ACF_URL }}" -O acf.zip
+        wget "${{ inputs.acf-url }}" -O acf.zip
         unzip acf.zip -d wp-content/plugins/
         rm acf.zip
       shell: bash
