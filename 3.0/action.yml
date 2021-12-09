@@ -78,6 +78,7 @@ runs:
         wget "${{ secrets.ACF_URL }}" -O acf.zip
         unzip acf.zip -d wp-content/plugins/
         rm acf.zip
+      shell: bash
 
     - name: Execute buildscripts in themes and plugins folders.
       run: php ./build.php --cleanup
