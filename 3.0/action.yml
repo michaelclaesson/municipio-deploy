@@ -114,8 +114,8 @@ runs:
       with:
         script: |
           cd ${{ inputs.deploy-host-path }}
-          wp nginx-helper purge-all --allow-root
-          wp cache flush --allow-root
+          wp nginx-helper purge-all --allow-root || true
+          wp cache flush --allow-root || true
           rm ${{ inputs.deploy-host-path }}/wp-content/uploads/cache/blade-cache/* || true 
           rm /tmp/blade-engine-cache/* || true
         host: ${{ inputs.deploy-host }}
