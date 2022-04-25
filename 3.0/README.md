@@ -20,7 +20,8 @@ Lastly it will clear all nginx, object and blade cache.
 | deploy-host-user            | Host deploy ssh user name                                                    | true     |
 | deploy-host-user-key        | Host deploy ssh user key                                                     | true     |
 | deploy-host-web-server-user | Host web server user                                                         | true     |
-| github-token                | github token for github npm package usage, use built in secrets.GITHUB_TOKEN | true     |
+| github-token                | Github token for github npm package usage, use built in secrets.GITHUB_TOKEN | true     |
+| acf-url                     | A url where a zip-file with ACF PRO can be found (ACF provides a url).       | true     |
 
 ## Secrets
 All parameters are sensitive information and should ONLY use [Github secrets.](https://docs.github.com/en/actions/security-guides/encrypted-secrets).  
@@ -48,13 +49,14 @@ jobs:
 
     - uses: helsingborg-stad/municipio-deploy/3.0@master
       with:
-        deploy-host: ${{ secrets.DEPLOY_REMOTE_HOST_DOMAIN_SE }}
+        deploy-host: ${{ secrets.DEPLOY_REMOTE_HOST_PROD }}
         deploy-host-path: ${{ secrets.DEPLOY_REMOTE_PATH_DOMAIN_SE }}
         deploy-host-backup-path: ${{ secrets.DEPLOY_REMOTE_BACKUP_DIR_DOMAIN_SE }}
         deploy-host-user: ${{ secrets.DEPLOY_REMOTE_USER }}
         deploy-host-user-key: ${{ secrets.DEPLOY_KEY }}
         deploy-host-web-server-user: ${{ secrets.WEB_SERVER_USER }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
+        acf-url: ${{ secrets.ACF_URL }}
   ```
 - Make sure branchname is matching the branch you would want to deploy.
 - Replace secret names with macthing secrets.
