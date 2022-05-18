@@ -39,6 +39,8 @@ runs:
       with:
         php-version: 7.4
         tools: composer:v2
+      env:
+        COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get Composer Cache Directory.
       id: composer-cache
