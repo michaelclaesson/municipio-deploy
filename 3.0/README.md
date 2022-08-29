@@ -23,6 +23,10 @@ Lastly it will clear all nginx, object and blade cache.
 | github-token                | Github token for github npm package usage, use built in secrets.GITHUB_TOKEN | true     |
 | acf-url                     | A url where a zip-file with ACF PRO can be found (ACF provides a url).       | true     |
 
+## Backups
+The rsync command is run with the --backup flag, any changed files on each deploy will be compresses and stored in the path selected in the deploy-host-backup-path parameter as {{github SHA}}.tar.gz.
+A delete step will remove any backup older than 7 days. As the step is running from this action no files will be deleted unless this action is being triggered.
+
 ## Secrets
 All parameters are sensitive information and should ONLY use [Github secrets.](https://docs.github.com/en/actions/security-guides/encrypted-secrets).  
 Secrets can be added on organisation level spanning all repositories in the org or on a repository level where Github actions in the current repository will be the only one able to read it.
