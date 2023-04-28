@@ -19,13 +19,8 @@
   <a href="https://github.com/helsingborg-stad/municipio-deploy/issues">Request Feature</a>
 </p>
 
-## About Municipio
+## About Municipio deploy
 A README.md is located in each action folder that will explain the purpose and usage of the action
-
-
-## Roadmap
-This repo is part of a project called Mitt Helsingborg. See the [project backlog](https://share.clickup.com/l/h/6-33382576-1/763b706816dbf53) for a complete list of upcoming features, known issues and releases.
-
 
 
 ## Contributing
