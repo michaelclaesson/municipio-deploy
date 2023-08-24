@@ -76,6 +76,10 @@ runs:
       run: composer install --prefer-dist --no-progress --no-suggest
       shell: bash
 
+    - name: Run composer dependency checks
+      run: php ./buildDependencyChecker.php
+      shell: bash
+
     - name: Inject access token in .npmrc.
       run: | 
         echo "@helsingborg-stad:registry=https://npm.pkg.github.com/helsingborg-stad" >> ~/.npmrc
@@ -90,7 +94,7 @@ runs:
       shell: bash
 
     - name: Execute buildscripts in themes and plugins folders.
-      run: php ./build.php --cleanup
+      run: php ./build.php --cleanup --lite
       shell: bash
 
     - name: Cleanup .npmrc
