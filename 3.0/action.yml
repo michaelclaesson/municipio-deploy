@@ -94,7 +94,7 @@ runs:
       shell: bash
 
     - name: Execute buildscripts in themes and plugins folders.
-      run: php ./build.php --cleanup --lite
+      run: php ./build.php --cleanup --no-composer-in-child-packages
       shell: bash
 
     - name: Cleanup .npmrc
