@@ -73,7 +73,7 @@ runs:
       shell: bash
 
     - name: Install composer dependencies.
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
       shell: bash
 
     - name: Run composer dependency checks
