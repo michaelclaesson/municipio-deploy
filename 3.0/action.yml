@@ -29,6 +29,10 @@ inputs:
   acf-url:
     description: ACF download url.
     required: true
+  php-version:
+    description: PHP Version
+    default: 7.4
+    required: false
 
 runs:
   using: composite
@@ -41,7 +45,7 @@ runs:
     - name: Setup PHP with composer v2.
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 7.4
+        php-version: ${{ inputs.php-version }}
         tools: composer:v2
       env:
         COMPOSER_TOKEN: ${{ inputs.github-token }}

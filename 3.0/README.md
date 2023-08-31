@@ -12,17 +12,18 @@ Lastly it will clear all nginx, object and blade cache.
 
 ## Parameters
 
-| Parameter name              | Description                                                                  | Required |
-|-----------------------------|------------------------------------------------------------------------------|----------|
-| deploy-host                 | Host domain or ip                                                            | true     |
-| deploy-port                 | Host ssh port                                                                | false    |
-| deploy-host-path            | Host deployment path                                                         | true     |
-| deploy-host-backup-path     | Host rsync backup path                                                       | true     |
-| deploy-host-user            | Host deploy ssh user name                                                    | true     |
-| deploy-host-user-key        | Host deploy ssh user key                                                     | true     |
-| deploy-host-web-server-user | Host web server user                                                         | true     |
-| github-token                | Github token for github npm package usage, use built in secrets.GITHUB_TOKEN | true     |
-| acf-url                     | A url where a zip-file with ACF PRO can be found (ACF provides a url).       | true     |
+| Parameter name              | Description                                                                  | Default    | Required |
+|-----------------------------|------------------------------------------------------------------------------|------------|----------|
+| deploy-host                 | Host domain or ip                                                            |            | true     |
+| deploy-port                 | Host ssh port                                                                | 22         | false    |
+| deploy-host-path            | Host deployment path                                                         |            | true     |
+| deploy-host-backup-path     | Host rsync backup path                                                       |            | true     |
+| deploy-host-user            | Host deploy ssh user name                                                    |            | true     |
+| deploy-host-user-key        | Host deploy ssh user key                                                     |            | true     |
+| deploy-host-web-server-user | Host web server user                                                         |            | true     |
+| github-token                | Github token for github npm package usage, use built in secrets.GITHUB_TOKEN |            | true     |
+| acf-url                     | A url where a zip-file with ACF PRO can be found (ACF provides a url).       |            | true     |
+| php-version                 | PHP Version                                                                  | 7.4        | false    |
 
 ## Backups
 The rsync command is run with the --backup flag, any changed files on each deploy will be compresses and stored in the path selected in the deploy-host-backup-path parameter as {{github SHA}}.tar.gz.
