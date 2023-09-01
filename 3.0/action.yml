@@ -81,7 +81,7 @@ runs:
       shell: bash
 
     - name: Run composer dependency checks
-      run: php ./buildDependencyChecker.php
+      run: test -f ./buildDependencyChecker.php && php ./buildDependencyChecker.php
       shell: bash
 
     - name: Inject access token in .npmrc.
