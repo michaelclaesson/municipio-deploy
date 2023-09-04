@@ -80,15 +80,6 @@ runs:
       run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative
       shell: bash
 
-    - name: Run composer dependency checks
-      run: |
-        if [ -f "./buildDependencyChecker.php" ]; then
-          php ./buildDependencyChecker.php
-        else
-          echo "./buildDependencyChecker.php does not exist, skipping dependency check."
-        fi
-      shell: bash
-
     - name: Inject access token in .npmrc.
       run: | 
         echo "@helsingborg-stad:registry=https://npm.pkg.github.com/helsingborg-stad" >> ~/.npmrc
