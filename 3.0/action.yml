@@ -37,7 +37,71 @@ inputs:
 runs:
   using: composite
   steps:
+    # Preflight section start
+     - name: Check SSH connectivity
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+        script: exit
 
+    - name: Create test file
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+        script: touch testfile.txt
+
+    - name: Change group of test file
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+        script: chgrp desired_group testfile.txt
+
+    - name: Change permissions of test file
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+        script: chmod 644 testfile.txt
+
+    - name: Delete test file
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+        script: rm testfile.txt
+
+    - name: Manipulate existing file
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+        script: cp -p readme.md readme.remove.md && rm readme.remove.md
+
+    - name: Check disk space
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+        script: df -h | grep -vE "^Filesystem|tmpfs|cdrom" | awk "{ print \$4 }" | sed "s/G//" | awk "{ sum += \$1 } END { if (sum >= 1) { print \"Disk space is sufficient\" } else { print \"Insufficient disk space\"; exit 1 } }"
+
+    # Preflight section end
     - uses: actions/setup-node@v3
       with:
         node-version: 16.13.2
