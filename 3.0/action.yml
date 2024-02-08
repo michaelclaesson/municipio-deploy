@@ -37,9 +37,9 @@ inputs:
 runs:
   using: composite
   steps:
-     - name: Check SSH connectivity
-       uses: appleboy/ssh-action@v1.0.0
-       with:
+    - name: Check SSH connectivity
+      uses: appleboy/ssh-action@v1.0.0
+      with:
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
         key: ${{ inputs.deploy-host-user-key }}
