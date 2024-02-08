@@ -37,7 +37,6 @@ inputs:
 runs:
   using: composite
   steps:
-    # Preflight section start
      - name: Check SSH connectivity
        uses: appleboy/ssh-action@v1.0.0
        with:
@@ -101,7 +100,6 @@ runs:
         port: ${{ inputs.deploy-port }}
         script: df -h | grep -vE "^Filesystem|tmpfs|cdrom" | awk "{ print \$4 }" | sed "s/G//" | awk "{ sum += \$1 } END { if (sum >= 1) { print \"Disk space is sufficient\" } else { print \"Insufficient disk space\"; exit 1 } }"
 
-    # Preflight section end
     - uses: actions/setup-node@v3
       with:
         node-version: 16.13.2
