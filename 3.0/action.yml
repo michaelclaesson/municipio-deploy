@@ -45,6 +45,7 @@ runs:
         key: ${{ inputs.deploy-host-user-key }}
         port: ${{ inputs.deploy-port }}
         script: echo "Hello World from deploy!"
+        debug: true
 
     - name: Create test file
       uses: appleboy/ssh-action@v1.0.0
