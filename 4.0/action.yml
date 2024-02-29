@@ -62,7 +62,7 @@ runs:
         username: ${{ inputs.deploy-host-user }}
         key: ${{ inputs.deploy-host-user-key }}
         port: ${{ inputs.deploy-port }}
-        script: chgrp litespeed testfile.txt
+        script: chgrp ubuntu testfile.txt
 
     - name: Test - Change permissions of test file
       uses: appleboy/ssh-action@v1.0.0
@@ -80,7 +80,9 @@ runs:
         username: ${{ inputs.deploy-host-user }}
         key: ${{ inputs.deploy-host-user-key }}
         port: ${{ inputs.deploy-port }}
-        script: cp -p testfile.txt textfile.remove.txt && rm readme.remove.md
+        script: |
+          cp -p testfile.txt testfile.remove.txt
+          rm testfile.remove.md
 
     - name: Test - Delete test file
       uses: appleboy/ssh-action@v1.0.0
