@@ -82,7 +82,7 @@ runs:
         port: ${{ inputs.deploy-port }}
         script: |
           cp -p testfile.txt testfile.remove.txt
-          rm testfile.remove.md
+          rm testfile.remove.txt
 
     - name: Test - Delete test file
       uses: appleboy/ssh-action@v1.0.0
