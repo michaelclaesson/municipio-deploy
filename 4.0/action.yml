@@ -62,7 +62,7 @@ runs:
         username: ${{ inputs.deploy-host-user }}
         key: ${{ inputs.deploy-host-user-key }}
         port: ${{ inputs.deploy-port }}
-        script: chgrp ubuntu testfile.txt
+        script: chgrp litespeed testfile.txt
 
     - name: Test - Change permissions of test file
       uses: appleboy/ssh-action@v1.0.0
