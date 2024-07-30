@@ -22,7 +22,11 @@ inputs:
     required: true
   deploy-host-web-server-user:
     description: Host web server user that should own the files.
-    required: true  
+    required: true
+  deploy-host-pagecache-path:
+    description: The path for LS PageCache. If set, files in here will be deleted.
+    required: false
+    default: ""
   github-token:
     description: Github token for npm package retrieval.
     required: true
@@ -249,3 +253,9 @@ runs:
         username: ${{ inputs.deploy-host-user }}
         key: ${{ inputs.deploy-host-user-key }}
         port: ${{ inputs.deploy-port }}
+    - name: Clear LS PageCache
+      uses: appleboy/ssh-action@v1.0.0
+      if: ${{ inputs.deploy-host-pagecache-path != "" }}
+      with:
+        script |
+          rm -rf ${{ inputs.deploy-host-pagecache-path }}
