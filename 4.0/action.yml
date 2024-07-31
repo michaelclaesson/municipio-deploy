@@ -255,7 +255,7 @@ runs:
         port: ${{ inputs.deploy-port }}
     - name: Clear LS PageCache
       uses: appleboy/ssh-action@v1.0.0
-      if: ${{ inputs.deploy-host-pagecache-path != "" }}
+      if: ${{ inputs.deploy-host-pagecache-path != '' }}
       with:
         script |
           rm -rf ${{ inputs.deploy-host-pagecache-path }}
