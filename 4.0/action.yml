@@ -27,6 +27,10 @@ inputs:
     description: The path for LS PageCache. If set, files in here will be deleted.
     required: false
     default: ""
+  kill-lsphp:
+    description: Whether or not to kill all LSPHP processes.
+    required: false
+    default: false
   github-token:
     description: Github token for npm package retrieval.
     required: true
@@ -259,3 +263,9 @@ runs:
       with:
         script |
           rm -rf ${{ inputs.deploy-host-pagecache-path }}
+    - name: Kill PHP
+      uses: appleboy/ssh-action@v1.0.0
+      if: ${{ inputs.kill-lsphp == true }}
+      with:
+        script |
+          sudo killall -KILL lsphp

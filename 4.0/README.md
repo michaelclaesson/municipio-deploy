@@ -21,6 +21,8 @@ Lastly it will clear all nginx, object and blade cache.
 | deploy-host-user            | Host deploy ssh user name                                                    |            | true     |
 | deploy-host-user-key        | Host deploy ssh user key                                                     |            | true     |
 | deploy-host-web-server-user | Host web server user                                                         |            | true     |
+| deploy-host-pagecache-path  | The path for LS PageCache. If set, files in here will be deleted on deploy.  |            | false    |
+| kill-lsphp                  | Whether or not to kill all LSPHP processes.                                  | false      | false    |
 | github-token                | Github token for github npm package usage, use built in secrets.GITHUB_TOKEN |            | true     |
 | acf-url                     | A url where a zip-file with ACF PRO can be found (ACF provides a url).       |            | true     |
 | php-version                 | PHP Version                                                                  | 8.2        | false    |
