@@ -261,11 +261,9 @@ runs:
       uses: appleboy/ssh-action@v1.0.0
       if: ${{ inputs.deploy-host-pagecache-path != '' }}
       with:
-        script |
-          rm -rf ${{ inputs.deploy-host-pagecache-path }}
+        script: rm -rf ${{ inputs.deploy-host-pagecache-path }}
     - name: Kill PHP
       uses: appleboy/ssh-action@v1.0.0
       if: ${{ inputs.kill-lsphp == true }}
       with:
-        script |
-          sudo killall -KILL lsphp
+        script: sudo killall -KILL lsphp
