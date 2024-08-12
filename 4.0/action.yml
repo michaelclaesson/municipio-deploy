@@ -45,6 +45,14 @@ inputs:
     description: If the preflight should be skipped
     default: false
     required: false
+  newrelic-app-id:
+    description: App ID for deployment tracking with newrelic
+    default: ""
+    required: false
+  newrelic-api-key:
+    description: API Key for deployment tracking with newrelic
+    default: ""
+    required: false
 
 runs:
   using: composite
@@ -267,3 +275,17 @@ runs:
       if: ${{ inputs.kill-lsphp == true }}
       with:
         script: sudo killall -KILL lsphp
+    - name: Ping NewRelic
+      if: ${{ inputs.newrelic-app-id != '' && inputs.newrelic-api-key != ''' }}
+      run: |
+        curl -X POST "https://api.newrelic.com/v2/applications/${{ inputs.newrelic-app-id }}/deployments.json" \
+        -H "X-Api-Key:${{ inputs.newrelic-api-key }}" \
+        -i \
+        -H "Content-Type: application/json" \
+        -d '{
+          "deployment": {
+            "revision": "${{ GITHUB_SHA }}",
+            "user": "${{ GITHUB_ACTOR }}"
+          }
+        }'
+      shell: bash
