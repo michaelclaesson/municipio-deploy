@@ -51,7 +51,7 @@ runs:
   steps:
     - name: Test - Check SSH connectivity
       uses: appleboy/ssh-action@v1.0.0
-      if: ${{ inputs.my_input == false }}
+      if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
@@ -61,7 +61,7 @@ runs:
 
     - name: Test - Create test file
       uses: appleboy/ssh-action@v1.0.0
-      if: ${{ inputs.my_input == false }}
+      if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
@@ -71,7 +71,7 @@ runs:
 
     - name: Test - Change group of test file
       uses: appleboy/ssh-action@v1.0.0
-      if: ${{ inputs.my_input == false }}
+      if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
@@ -81,7 +81,7 @@ runs:
 
     - name: Test - Change permissions of test file
       uses: appleboy/ssh-action@v1.0.0
-      if: ${{ inputs.my_input == false }}
+      if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
@@ -91,7 +91,7 @@ runs:
 
     - name: Test - Manipulate existing file
       uses: appleboy/ssh-action@v1.0.0
-      if: ${{ inputs.my_input == false }}
+      if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
@@ -103,7 +103,7 @@ runs:
 
     - name: Test - Delete test file
       uses: appleboy/ssh-action@v1.0.0
-      if: ${{ inputs.my_input == false }}
+      if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
@@ -113,7 +113,7 @@ runs:
 
     - name: Test - Check disk space
       uses: appleboy/ssh-action@v1.0.0
-      if: ${{ inputs.my_input == false }}
+      if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
@@ -123,7 +123,7 @@ runs:
 
     - name: Test - Check php version
       uses: appleboy/ssh-action@v1.0.0
-      if: ${{ inputs.my_input == false }}
+      if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
