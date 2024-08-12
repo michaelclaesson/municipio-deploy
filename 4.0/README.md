@@ -28,6 +28,11 @@ Lastly it will clear all nginx, object and blade cache.
 | php-version                 | PHP Version                                                                  | 8.2        | false    |                                                            |
 | newrelic-app-id             | App ID for deployment tracking with newrelic                                 |            | false    | Needs to be set with newrelic-api-key to execute the step. |
 | newrelic-api-key            | API Key for deployment tracking with newrelic                                |            | false    | Needs to be set with newrelic-app-id to execute the step.  |
+| sentry-url                  | Base url to sentry instance                                                  |            | false    | Needs to be set with other sentry vars to execute the step |
+| sentry-org                  | The Organization Slug the project is at                                      |            | false    | Needs to be set with other sentry vars to execute the step |
+| sentry-version              | The version identifier of the release to track the deploy for                |            | false    | Needs to be set with other sentry vars to execute the step |
+| sentry-api-key              | The API key to use with sentry                                               |            | false    | Needs to be set with other sentry vars to execute the step |
+| sentry-env                  | The enviroment to track the deploy for                                       |            | false    | Needs to be set with other sentry vars to execute the step |
 
 
 ## Backups
@@ -37,6 +42,10 @@ A delete step will remove any backup older than 7 days. As the step is running f
 ## Secrets
 All parameters are sensitive information and should ONLY use [Github secrets.](https://docs.github.com/en/actions/security-guides/encrypted-secrets).  
 Secrets can be added on organisation level spanning all repositories in the org or on a repository level where Github actions in the current repository will be the only one able to read it.
+
+## Sentry
+
+For information on configuring the Sentry ping, please refer to [Sentrys own documentation](https://docs.sentry.io/api/releases/create-a-new-deploy-for-an-organization/)
 
 ## Usage
 In your Municipio 4.0 site repository:

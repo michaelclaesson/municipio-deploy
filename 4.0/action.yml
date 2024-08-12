@@ -53,6 +53,26 @@ inputs:
     description: API Key for deployment tracking with newrelic
     default: ""
     required: false
+  sentry-url:
+    description: Base url to sentry instance
+    default: ""
+    required: false
+  sentry-org:
+    description: The Organization Slug the project is at
+    default: ""
+    required: false
+  sentry-version:
+    description: The version identifier of the release to track the deploy for. 
+    default: ""
+    required: false
+  sentry-api-key: The API key to use with sentry
+    description: 
+    default: ""
+    required: false
+  sentry-env:
+    description: The enviroment to track the deploy for
+    default: ""
+    required: false
 
 runs:
   using: composite
@@ -288,4 +308,12 @@ runs:
             "user": "${{ GITHUB_ACTOR }}"
           }
         }'
+      shell: bash
+    - name: Ping Sentry
+      if: ${{ inputs.sentry-url != '' && inputs.sentry-org != '' && inputs.sentry-version != '' && inputs.sentry-api-key != '' && inputs.sentry-env != '' }}
+      run: |
+        curl ${{ inputs.sentry-url }}/api/0/organizations/${{ inputs.sentry-org }}/releases/${{ inputs.sentry-version }}/deploys/ \
+          -H 'Authorization: Bearer ${{ inputs.sentry-api-key }}' \
+          -H 'Content-Type: application/json' \
+          -d '{"environment":"${{ inputs.sentry-env }}"}'
       shell: bash
