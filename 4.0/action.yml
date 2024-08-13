@@ -296,7 +296,7 @@ runs:
       with:
         script: sudo killall -KILL lsphp
     - name: Ping NewRelic
-      if: ${{ inputs.newrelic-app-id != '' && inputs.newrelic-api-key != ''' }}
+      if: ${{ inputs.newrelic-app-id != '' && inputs.newrelic-api-key != '' }}
       run: |
         curl -X POST "https://api.newrelic.com/v2/applications/${{ inputs.newrelic-app-id }}/deployments.json" \
         -H "X-Api-Key:${{ inputs.newrelic-api-key }}" \
@@ -304,8 +304,8 @@ runs:
         -H "Content-Type: application/json" \
         -d '{
           "deployment": {
-            "revision": "${{ GITHUB_SHA }}",
-            "user": "${{ GITHUB_ACTOR }}"
+            "revision": "${{ github.sha }}",
+            "user": "${{ github.actor }}"
           }
         }'
       shell: bash
