@@ -65,8 +65,8 @@ inputs:
     description: The version identifier of the release to track the deploy for. 
     default: ""
     required: false
-  sentry-api-key: The API key to use with sentry
-    description: 
+  sentry-api-key:
+    description: The API key to use with sentry
     default: ""
     required: false
   sentry-env:
