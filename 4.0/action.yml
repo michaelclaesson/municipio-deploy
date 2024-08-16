@@ -265,7 +265,9 @@ runs:
     - name: Set file permissions.
       uses: appleboy/ssh-action@v1.0.0
       with:
-        script: find ${{ inputs.deploy-host-path }} -path ${{ inputs.deploy-host-path }}/wp-content/uploads -prune -o ! -type l -exec chmod g+rw {} +
+        script: |
+          find ${{ inputs.deploy-host-path }} -path ${{ inputs.deploy-host-path }} -prune -o ! -type l -exec chmod g+r {} +
+          find ${{ inputs.deploy-host-path }}/wp-content/uploads -path ${{ inputs.deploy-host-path }}/wp-content/uploads -prune -o ! -type l -exec chmod g+rw {} +
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
         key: ${{ inputs.deploy-host-user-key }}
