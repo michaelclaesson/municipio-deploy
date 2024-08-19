@@ -281,8 +281,8 @@ runs:
           wp nginx-helper purge-all --allow-root || true
           wp cache flush --allow-root || true
           rm -rf ${{ inputs.deploy-host-path }}/../.cache/vhosts/Jelastic/* || true
-          rm ${{ inputs.deploy-host-path }}/wp-content/uploads/cache/* || true 
-          rm /tmp/blade-engine-cache/* || true
+          rm -rf ${{ inputs.deploy-host-path }}/wp-content/uploads/cache/* || true 
+          rm -rf /tmp/blade-engine-cache/* || true
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
         key: ${{ inputs.deploy-host-user-key }}
