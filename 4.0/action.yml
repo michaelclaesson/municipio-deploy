@@ -292,11 +292,19 @@ runs:
       if: ${{ inputs.deploy-host-pagecache-path != '' }}
       with:
         script: rm -rf ${{ inputs.deploy-host-pagecache-path }}
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
     - name: Kill PHP
       uses: appleboy/ssh-action@v1.0.0
       if: ${{ inputs.kill-lsphp == true }}
       with:
         script: sudo killall -KILL lsphp
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
     - name: Ping NewRelic
       if: ${{ inputs.newrelic-app-id != '' && inputs.newrelic-api-key != '' }}
       run: |
