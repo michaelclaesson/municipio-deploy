@@ -116,7 +116,7 @@ runs:
         remote_port: ${{ inputs.deploy-port }}
 
     - name: Compress backup files.
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       with:
         script: tar --remove-files -zcf ${{ inputs.deploy-host-backup-path }}/${{ github.sha }}.tar.gz -C ${{ inputs.deploy-host-backup-path }} ${{ github.sha }}
         host: ${{ inputs.deploy-host }}
@@ -125,7 +125,7 @@ runs:
         port: ${{ inputs.deploy-port }}
 
     - name: Delete backups older than 7 days.
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       with:
         script: find ${{ inputs.deploy-host-backup-path }} -type f -mtime +7 -name '*.tar.gz' -delete
         host: ${{ inputs.deploy-host }}
@@ -134,7 +134,7 @@ runs:
         port: ${{ inputs.deploy-port }}
 
     - name: Set file permissions.
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       with:
         script: find ${{ inputs.deploy-host-path }} -path ${{ inputs.deploy-host-path }}/wp-content/uploads -prune -o ! -type l -exec chmod g+rw {} +
         host: ${{ inputs.deploy-host }}
@@ -143,7 +143,7 @@ runs:
         port: ${{ inputs.deploy-port }}
 
     - name: Clear all cache.
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       with:
         script: |
           cd ${{ inputs.deploy-host-path }}
