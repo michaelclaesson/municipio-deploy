@@ -78,7 +78,7 @@ runs:
   using: composite
   steps:
     - name: Test - Check SSH connectivity
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
@@ -88,7 +88,7 @@ runs:
         script: echo "Hello World from deploy!"
 
     - name: Test - Create test file
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
@@ -98,7 +98,7 @@ runs:
         script: touch testfile.txt
 
     - name: Test - Change group of test file
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
@@ -108,7 +108,7 @@ runs:
         script: chgrp litespeed testfile.txt
 
     - name: Test - Change permissions of test file
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
@@ -118,7 +118,7 @@ runs:
         script: chmod 644 testfile.txt
 
     - name: Test - Manipulate existing file
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
@@ -130,7 +130,7 @@ runs:
           rm testfile.remove.txt
 
     - name: Test - Delete test file
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
@@ -140,7 +140,7 @@ runs:
         script: rm testfile.txt
 
     - name: Test - Check disk space
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
@@ -150,7 +150,7 @@ runs:
         script: df -h | grep -vE "^Filesystem|tmpfs|cdrom" | awk "{ print \$4 }" | sed "s/G//" | awk "{ sum += \$1 } END { if (sum >= 1) { print \"Disk space is sufficient\" } else { print \"Insufficient disk space\"; exit 1 } }"
 
     - name: Test - Check php version
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.skip-preflight == false }}
       with:
         host: ${{ inputs.deploy-host }}
@@ -245,7 +245,7 @@ runs:
         remote_port: ${{ inputs.deploy-port }}
 
     - name: Compress backup files.
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       with:
         script: tar --remove-files -zcf ${{ inputs.deploy-host-backup-path }}/${{ github.sha }}.tar.gz -C ${{ inputs.deploy-host-backup-path }} ${{ github.sha }}
         host: ${{ inputs.deploy-host }}
@@ -254,7 +254,7 @@ runs:
         port: ${{ inputs.deploy-port }}
 
     - name: Delete backups older than 7 days.
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       with:
         script: find ${{ inputs.deploy-host-backup-path }} -type f -mtime +7 -name '*.tar.gz' -delete
         host: ${{ inputs.deploy-host }}
@@ -263,7 +263,7 @@ runs:
         port: ${{ inputs.deploy-port }}
 
     - name: Set file permissions.
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       with:
         script: |
           find ${{ inputs.deploy-host-path }} -path ${{ inputs.deploy-host-path }} -prune -o ! -type l -exec chmod g+r {} +
@@ -274,7 +274,7 @@ runs:
         port: ${{ inputs.deploy-port }}
 
     - name: Clear all cache.
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       with:
         script: |
           cd ${{ inputs.deploy-host-path }}
@@ -288,7 +288,7 @@ runs:
         key: ${{ inputs.deploy-host-user-key }}
         port: ${{ inputs.deploy-port }}
     - name: Clear LS PageCache
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.deploy-host-pagecache-path != '' }}
       with:
         script: rm -rf ${{ inputs.deploy-host-pagecache-path }}
@@ -297,7 +297,7 @@ runs:
         key: ${{ inputs.deploy-host-user-key }}
         port: ${{ inputs.deploy-port }}
     - name: Kill PHP
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.kill-lsphp == true }}
       with:
         script: sudo killall -KILL lsphp
