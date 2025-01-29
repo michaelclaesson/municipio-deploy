@@ -226,7 +226,7 @@ runs:
       shell: bash
 
     - name: Execute buildscripts in themes and plugins folders.
-      run: php ./build.php --cleanup --no-composer-in-child-packages
+      run: php ./build.php --cleanup --no-composer-in-child-packages --install-npm
       shell: bash
 
     - name: Cleanup .npmrc
