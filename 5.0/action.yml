@@ -80,8 +80,7 @@ runs:
 
     ###########################
     # Preflight
-    # Check if the server is reachable and 
-    # has proper disk access, php version etc.
+    # Check if the server is reachable and has proper disk access, php version etc.
     ###########################
 
     - name: Test - Check SSH connectivity
@@ -178,6 +177,7 @@ runs:
     # Setup
     # Init the actions env. Install PHP, Node and Composer.
     ###########################
+
     - uses: actions/setup-node@v3
       with:
         node-version: 16.13.2
@@ -268,6 +268,17 @@ runs:
         remote_user: ${{ inputs.deploy-host-user }}
         remote_key: ${{ inputs.deploy-host-user-key }}
         remote_port: ${{ inputs.deploy-port }}
+
+    ###########################
+    # Zip Artifact
+    # Package build as a zip artifact.
+    ###########################
+
+    - name: Create Zip Artifact Release
+      uses: thedoctor0/zip-release@0.7.6
+      with:
+        type: 'tar'
+        filename: 'release.tar.gz'
 
 
     ###########################
