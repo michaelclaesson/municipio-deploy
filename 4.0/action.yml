@@ -228,3 +228,102 @@ runs:
     - name: Execute buildscripts in themes and plugins folders.
       run: php ./build.php --cleanup --no-composer-in-child-packages --install-npm
       shell: bash
+
+    - name: Cleanup .npmrc
+      run: rm ~/.npmrc
+      shell: bash
+
+    - name: The rsync deployment to www-data user.
+      uses: burnett01/rsync-deployments@7.0.1
+      with:
+        switches: -avzrog --delete --backup --backup-dir=${{ inputs.deploy-host-backup-path }}/$GITHUB_SHA --exclude="/config" --exclude config-example --exclude wp-content/uploads --exclude wp-content/plugins/gravityforms --exclude wp-content/plugins/wp-schema-pro --exclude track-assets --exclude wp-content/plugins/volontar-wordpress --exclude wp-content/languages --exclude .htaccess --exclude security.txt --exclude wp-content/plugins/local_* --exclude wp-content/mu-plugins/local_* --exclude wp-content/fonts 
+        path: .
+        remote_path: ${{ inputs.deploy-host-path }}
+        remote_host: ${{ inputs.deploy-host }}
+        remote_user: ${{ inputs.deploy-host-user }}
+        remote_key: ${{ inputs.deploy-host-user-key }}
+        remote_port: ${{ inputs.deploy-port }}
+
+    - name: Compress backup files.
+      uses: appleboy/ssh-action@v1.1.0
+      with:
+        script: tar --remove-files -zcf ${{ inputs.deploy-host-backup-path }}/${{ github.sha }}.tar.gz -C ${{ inputs.deploy-host-backup-path }} ${{ github.sha }}
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+
+    - name: Delete backups older than 7 days.
+      uses: appleboy/ssh-action@v1.1.0
+      with:
+        script: find ${{ inputs.deploy-host-backup-path }} -type f -mtime +7 -name '*.tar.gz' -delete
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+
+    - name: Set file permissions.
+      uses: appleboy/ssh-action@v1.1.0
+      with:
+        script: |
+          find ${{ inputs.deploy-host-path }} -path ${{ inputs.deploy-host-path }} -prune -o ! -type l -exec chmod g+r {} +
+          find ${{ inputs.deploy-host-path }}/wp-content/uploads -path ${{ inputs.deploy-host-path }}/wp-content/uploads -prune -o ! -type l -exec chmod g+rw {} +
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+
+    - name: Clear all cache.
+      uses: appleboy/ssh-action@v1.1.0
+      with:
+        script: |
+          cd ${{ inputs.deploy-host-path }}
+          wp nginx-helper purge-all --allow-root || true
+          wp cache flush --allow-root || true
+          rm -rf ${{ inputs.deploy-host-path }}/../.cache/vhosts/Jelastic/* || true
+          rm -rf ${{ inputs.deploy-host-path }}/wp-content/uploads/cache/* || true 
+          rm -rf /tmp/blade-engine-cache/* || true
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+    - name: Clear LS PageCache
+      uses: appleboy/ssh-action@v1.1.0
+      if: ${{ inputs.deploy-host-pagecache-path != '' }}
+      with:
+        script: rm -rf ${{ inputs.deploy-host-pagecache-path }}
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+    - name: Kill PHP
+      uses: appleboy/ssh-action@v1.1.0
+      if: ${{ inputs.kill-lsphp == true }}
+      with:
+        script: sudo killall -KILL lsphp
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
+    - name: Ping NewRelic
+      if: ${{ inputs.newrelic-app-id != '' && inputs.newrelic-api-key != '' }}
+      run: |
+        curl -X POST "https://api.newrelic.com/v2/applications/${{ inputs.newrelic-app-id }}/deployments.json" \
+        -H "X-Api-Key:${{ inputs.newrelic-api-key }}" \
+        -i \
+        -H "Content-Type: application/json" \
+        -d '{
+          "deployment": {
+            "revision": "${{ github.sha }}",
+            "user": "${{ github.actor }}"
+          }
+        }'
+      shell: bash
+    - name: Ping Sentry
+      if: ${{ inputs.sentry-url != '' && inputs.sentry-org != '' && inputs.sentry-version != '' && inputs.sentry-api-key != '' && inputs.sentry-env != '' }}
+      run: |
+        curl ${{ inputs.sentry-url }}/api/0/organizations/${{ inputs.sentry-org }}/releases/${{ inputs.sentry-version }}/deploys/ \
+          -H 'Authorization: Bearer ${{ inputs.sentry-api-key }}' \
+          -H 'Content-Type: application/json' \
+          -d '{"environment":"${{ inputs.sentry-env }}"}'
+      shell: bash
