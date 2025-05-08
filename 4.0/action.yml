@@ -168,7 +168,7 @@ runs:
 
     - uses: actions/setup-node@v3
       with:
-        node-version: 20.19.1
+        node-version: 22.15.0
 
     - name: Setup PHP with composer v2.
       uses: shivammathur/setup-php@v2
