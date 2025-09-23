@@ -336,7 +336,7 @@ runs:
           -d '{"environment":"${{ inputs.sentry-env }}"}'
       shell: bash
 
-    - name: Notify Tideways
+    - name: Ping Tideways
       if: ${{ inputs.tideways-api-key != '' && inputs.tideways-env != '' }}
       uses: tideways/release-action@v1
       with:

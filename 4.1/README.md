@@ -4,7 +4,7 @@
   </a>
 </p>
 
-# 4.0 deploy action
+# 4.1 deploy action
 This action will setup the build machine with php and node install all composer packages and run `php ./build.php`.  
 The `build.php` is expected to perform a complete build of the site.  
 All outcome from the build script is the pushed to a host with rsync based on below parameters.  
@@ -33,6 +33,8 @@ Lastly it will clear all nginx, object and blade cache.
 | sentry-version              | The version identifier of the release to track the deploy for                |            | false    | Needs to be set with other sentry vars to execute the step |
 | sentry-api-key              | The API key to use with sentry                                               |            | false    | Needs to be set with other sentry vars to execute the step |
 | sentry-env                  | The enviroment to track the deploy for                                       |            | false    | Needs to be set with other sentry vars to execute the step |
+| tideways-api-key            | The API key to use with sentry                                               |            | false    | Needs to be set with other sentry vars to execute the step |
+| tideways-env                | The enviroment to track the deploy for                                       |            | false    | Needs to be set with other tideways vars to execute the step |
 
 
 ## Backups
