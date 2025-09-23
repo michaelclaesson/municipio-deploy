@@ -1,4 +1,4 @@
-name: Municipio Deploy 4.0
+name: Municipio Deploy 4.1
 description: Centralized deploy Action for municipio based sites in Helsingborg stad.
 inputs:
   deploy-host:
