@@ -337,8 +337,8 @@ runs:
       shell: bash
 
     - name: Ping Tideways
-      if: ${{ inputs.tideways-api-key != '' && inputs.tideways-env != '' }}
       uses: tideways/release-action@v1
+      if: ${{ inputs.tideways-api-key != '' && inputs.tideways-env != '' }}
       with:
         apiKey: ${{ inputs.tideways-api-key }}
         name: 'Released commit ${{ github.sha }}'
