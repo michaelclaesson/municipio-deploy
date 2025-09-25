@@ -241,18 +241,6 @@ runs:
       run: rm ~/.npmrc
       shell: bash
 
-    - name: Fix permissions for deploy user
-      uses: appleboy/ssh-action@v1.1.0
-      with:
-        host: ${{ inputs.deploy-host }}
-        username: ${{ inputs.deploy-host-user }}
-        key: ${{ inputs.deploy-host-user-key }}
-        port: ${{ inputs.deploy-port }}
-        script: |
-          chown -R ${{ inputs.inputs.deploy-host-web-server-user }}:$${{ inputs.deploy-host-web-server-user }} ${{ inputs.deploy-host-path }}/wp-content/plugins/modularity
-          chmod -R u+rw ${{ inputs.deploy-host-path }}/wp-content/plugins/modularity
-
-
     - name: The rsync deployment to www-data user.
       uses: burnett01/rsync-deployments@7.0.1
       with:
