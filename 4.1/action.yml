@@ -299,7 +299,9 @@ runs:
       uses: appleboy/ssh-action@v1.1.0
       if: ${{ inputs.deploy-host-pagecache-path != '' }}
       with:
-        script: rm -rf ${{ inputs.deploy-host-pagecache-path }}
+        script: |
+        	P="${{ inputs.deploy-host-pagecache-path }}"
+        	rm -rf "$P"/* "$P"/.[!.]* "$P"/..?*
         host: ${{ inputs.deploy-host }}
         username: ${{ inputs.deploy-host-user }}
         key: ${{ inputs.deploy-host-user-key }}
